@@ -78,7 +78,7 @@ const http_status&
 reply::code() const
 { return status_; }
 
-const ws_connection& 
+const ws_connection&
 reply::websocket_callback() const
 { return ws_connection_; }
 
@@ -156,7 +156,7 @@ reply::operator<<(const http_status& s)
     return *this;
 }
 
-reply& 
+reply&
 reply::operator<<(const ws_connection& w)
 {
     ws_connection_ = w;
@@ -172,8 +172,7 @@ reply::handle_error()
 {
     if (status_.is_error()) {
         data_.clear();
-        jsonv::value e = jsonv::object({{ "error", status_.error }});
-        *this << e;
+        *this << status_.error;
     }
 }
 

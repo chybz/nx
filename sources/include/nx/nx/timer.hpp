@@ -22,6 +22,7 @@ public:
     >;
 
     timer();
+    virtual ~timer();
 
     timer(const timer& other) = delete;
     timer(timer&& other) = default;

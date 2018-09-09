@@ -12,7 +12,6 @@
 #include <nx/config.h>
 #include <nx/buffer.hpp>
 #include <nx/headers.hpp>
-#include <nx/json.hpp>
 #include <nx/file.hpp>
 #include <nx/data.hpp>
 #include <nx/socket_base.hpp>
@@ -46,8 +45,6 @@ public:
 
     http_msg_base& operator<<(const header& h);
     http_msg_base& operator<<(const headers& h);
-    http_msg_base& operator<<(const json& js);
-    http_msg_base& operator<<(const jsonv::value& v);
     http_msg_base& operator<<(const file& f);
 
     template <typename T>

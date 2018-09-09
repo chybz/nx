@@ -68,27 +68,6 @@ httpd::operator()(const endpoint_local& ep)
         );
 }
 
-httpd&
-httpd::operator<<(json_collection_base& c)
-{
-    auto& me = *this;
-
-    // Operations on the whole collection
-    collection_tag ct;
-
-    me(GET) / c.path() = c.GET(ct);
-    me(POST) / c.path() = c.POST(ct);
-
-    // Operations on a specific item
-    item_tag it;
-
-    me(GET) / c.path() / ":id" = c.GET(it);
-    me(PUT) / c.path() / ":id" = c.PUT(it);
-    me(DELETE) / c.path() / ":id" = c.DELETE(it);
-
-    return me;
-}
-
 void
 httpd::operator()(request& req, buffer& data, reply& rep)
 {

@@ -7,6 +7,9 @@ timer::timer()
 : t_(service::get().io_service())
 {}
 
+timer::~timer()
+{}
+
 timer&
 timer::operator()(const timestamp& after)
 {

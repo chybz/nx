@@ -4,7 +4,6 @@
 
 #include <nx/config.h>
 #include <nx/buffer.hpp>
-#include <nx/json.hpp>
 #include <string>
 #include <memory>
 
@@ -25,7 +24,6 @@ struct frame_type {
 
 const frame_type ws_text = { text_frame_type };
 const frame_type ws_binary = { binary_frame_type };
-const frame_type ws_json = { text_frame_type };
 
 /// WS contextual class
 class NX_API context {
@@ -44,8 +42,6 @@ public:
 
     context& operator<< (const frame_type& );
     context& operator<< (const buffer& data);
-    context& operator<< (const json& j);
-    context& operator<< (const jsonv::value& v);
 
     template<typename T>
     context& operator<< (T&& v)
@@ -53,8 +49,6 @@ public:
         data_ << std::forward<T>(v);
         return *this;
     }
-
-    context& operator<< (jsonv::value&& v);
 
     void stop();
 
@@ -81,7 +75,7 @@ struct ws_connection {
 
     ws_connection& operator=(const ws_connection& ) = default;
     ws_connection& operator=(ws_connection&& ) = default;
-    
+
     ws_connection(ws_connect_cb ccb, ws_message_cb mcb, ws_finish_cb fcb)
     : connect_cb(ccb),
       message_cb(mcb),

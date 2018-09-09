@@ -103,27 +103,6 @@ http_msg_base::operator<<(const headers& h)
 }
 
 http_msg_base&
-http_msg_base::operator<<(const json& js)
-{
-    headers_ << application_json;
-    data_ << js;
-
-    return *this;
-}
-
-http_msg_base&
-http_msg_base::operator<<(const jsonv::value& v)
-{
-    headers_ << application_json;
-
-    std::ostringstream oss;
-    oss << v;
-    data_ << oss.str();
-
-    return *this;
-}
-
-http_msg_base&
 http_msg_base::operator<<(const file& f)
 {
     data_ << f;

@@ -23,10 +23,13 @@ public:
     task()
     : io_service_(),
       work_(io_service_),
-      t_([this](){ 
+      t_([this](){
           io_service_.run();
-          io_service_.reset(); 
+          io_service_.reset();
       })
+    {}
+
+    virtual ~task()
     {}
 
     task(const task& ) = delete;

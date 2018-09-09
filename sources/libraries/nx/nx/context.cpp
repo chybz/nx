@@ -3,7 +3,7 @@
 
 namespace nx {
 
-void 
+void
 encode_frame_data(buffer& b, bool binary, const buffer& data)
 {
     auto size = data.size();
@@ -38,65 +38,31 @@ encode_frame_data(buffer& b, bool binary, const buffer& data)
 context::~context()
 { flush(); }
 
-context& 
+context&
 context::operator<< (const frame_type& type)
 {
     type_ = type.value;
     return *this;
 }
 
-context& 
+context&
 context::operator<< (const buffer& data)
-{   
+{
     data_ << data;
-    return *this;
-}
-
-context& 
-context::operator<< (const json& j)
-{
-    type_ = text_frame_type;
-
-    (*this) << j;
-    return *this;
-}
-
-
-context& 
-context::operator<< (const jsonv::value& v)
-{
-    type_ = text_frame_type;
-
-    std::ostringstream oss;
-    oss << v;
-    (*this) << oss.str();
-
-    return *this;
-}
-
-context& 
-context::operator<< (jsonv::value&& v)
-{
-    type_ = text_frame_type;
-
-    std::ostringstream oss;
-    oss << v;
-    (*this) << oss.str();
-
     return *this;
 }
 
 void
 context::stop()
-{ 
+{
     async() << [this]() {
         if (auto w = w_.lock()) {
             w->stop_socket();
         }
-    }; 
+    };
 }
 
-std::string 
+std::string
 context::uid()
 {
     std::string result;
@@ -116,7 +82,7 @@ context::uid() const
     return result;
 }
 
-bool 
+bool
 context::operator< (const context& rhs) const
 { return uid() > rhs.uid(); }
 

@@ -7,7 +7,6 @@
 #include <nx/http.hpp>
 #include <nx/methods.hpp>
 #include <nx/route.hpp>
-#include <nx/json_collection.hpp>
 
 namespace nx {
 
@@ -21,8 +20,6 @@ public:
     endpoint operator()(const endpoint& ep);
     endpoint_tcp operator()(const endpoint_tcp& ep);
     endpoint_local operator()(const endpoint_local& ep);
-
-    httpd& operator<<(json_collection_base& c);
 
 private:
     void operator()(request& req, buffer& data, reply& rep);

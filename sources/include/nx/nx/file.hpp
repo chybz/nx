@@ -81,7 +81,7 @@ void send_file_write(Socket& s, file_state fs, Callable cb)
 
     // Call platform specific implementation
     auto result = send_file(
-        s.sock().native(),
+        s.sock().native_handle(),
         fs.fd,
         &fs.offset,
         fs.total - fs.offset
