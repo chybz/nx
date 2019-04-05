@@ -4,7 +4,7 @@
 #include <functional>
 
 #include <stdint.h>
-#include <uuid/uuid.h>
+#include <uuid.h>
 
 #include <nx/config.h>
 #include <nx/buffer.hpp>
@@ -15,7 +15,7 @@ namespace nx {
 class context;
 struct ws_connection;
 
-/// WS Connection Callback 
+/// WS Connection Callback
 using ws_connect_cb = std::function<
     void(context&&)
 >;
@@ -58,7 +58,7 @@ public:
 
 
     virtual void stop_socket() = 0;
-    
+
     virtual void push_in_socket(buffer&& b) = 0;
     virtual void push_in_socket(std::string&& s) = 0;
     virtual void push_in_socket(std::string& s) = 0;

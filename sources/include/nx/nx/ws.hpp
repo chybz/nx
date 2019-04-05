@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <arpa/inet.h>
-#include <uuid/uuid.h>
+#include <uuid.h>
 
 #include <random>
 #include <iterator>
@@ -55,8 +55,8 @@ class NX_API ws
 
     virtual void start()
     {
-        (*this)[tags::on_read] = [](ws& w) { 
-            w.process_frames(); 
+        (*this)[tags::on_read] = [](ws& w) {
+            w.process_frames();
         };
         (*this)[tags::on_close] = [](ws& w) {
             w.process_close();
@@ -65,7 +65,7 @@ class NX_API ws
         base_type::start();
         if (connect_cb_) {
             connect_cb_(context(self()));
-        } 
+        }
     }
 
     bool parse_frame(ws_frame& f)
@@ -175,7 +175,7 @@ class NX_API ws
                 break;
 
                 case WS_OP_CLOSE: {
-                    uint16_t code = ((uint16_t)f.payload[0] << 8) | (f.payload[1] & 0xFF); 
+                    uint16_t code = ((uint16_t)f.payload[0] << 8) | (f.payload[1] & 0xFF);
                     finish(code);
                 }
                 break;
@@ -211,7 +211,7 @@ class NX_API ws
             req == GET
             &&
             req.has(upgrade_websocket)
-            && 
+            &&
             req.has(connection_upgrade)
             &&
             req.has(Sec_WebSocket_Key)

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <regex>
 
 #include <nx/uri.hpp>
 #include <nx/escape.hpp>

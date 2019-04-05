@@ -16,8 +16,8 @@ BOOST_AUTO_TEST_CASE(send_file)
     nx::cond_var cv;
 
     nx::system_config sc;
-    auto lorem_file = cxxu::cat_file(sc.test_data_dir(), "testfile.txt");
-    auto lorem_data = nx::slurp_file(lorem_file);
+    auto lorem_file = cat_file(sc.test_data_dir(), "testfile.txt");
+    auto lorem_data = nx::slurp(lorem_file);
 
     deadline(5) = [&](nx::timer& t) {
         t.stop();

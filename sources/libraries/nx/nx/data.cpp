@@ -1,4 +1,4 @@
-#include <cxxu/utils.hpp>
+#include <nx/utils.hpp>
 
 #include <nx/data.hpp>
 
@@ -19,9 +19,9 @@ data::clear()
 data&
 data::operator<<(const file& f)
 {
-    if (cxxu::file_exists(f.path)) {
+    if (file_exists(f.path)) {
         make_file(f);
-        size_ += cxxu::file_size(f.path);
+        size_ += file_size(f.path);
     }
 
     return *this;

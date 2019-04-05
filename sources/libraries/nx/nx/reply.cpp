@@ -3,7 +3,6 @@
 
 #include <nx/reply.hpp>
 #include <nx/utils.hpp>
-#include <cxxu/logging.hpp>
 
 namespace nx {
 
@@ -123,7 +122,7 @@ reply::done()
         try {
             cb();
         } catch (const std::exception& e) {
-            cxxu::error()
+            std::clog
                 << "reply callback failed (ignored): "
                 << e.what()
                 ;
