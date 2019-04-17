@@ -153,9 +153,6 @@ extract_delimited(
 NX_API
 std::string demangle_type_name(const std::string& mangled);
 
-NX_API
-std::string md5sum(const std::string& file);
-
 template <typename T>
 std::size_t
 enum_index(const T& t)

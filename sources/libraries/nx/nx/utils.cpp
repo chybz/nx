@@ -26,7 +26,6 @@
 #include <algorithm>
 
 #include <boost/filesystem.hpp>
-#include <boost/md5.hpp>
 #include <boost/algorithm/string/trim.hpp>
 
 #include <nx/utils.hpp>
@@ -792,15 +791,6 @@ demangle_type_name(const std::string& mangled)
     }
 
     return std::string("unsupported");
-}
-
-std::string
-md5sum(const std::string& file)
-{
-    std::ifstream in(file, std::ios::binary);
-    boost::md5 md5(in);
-
-    return md5.digest().hex_str_value();
 }
 
 } // namespace nx
