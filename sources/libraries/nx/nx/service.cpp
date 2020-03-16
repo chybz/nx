@@ -19,21 +19,21 @@ service::get()
 }
 
 service::service()
-: io_service_(),
-work_(io_service_),
+: io_context_(),
+work_(io_context_),
 t_()
 { start(); }
 
 service::~service()
 { stop(); }
 
-asio::io_service&
-service::io_service()
-{ return io_service_; }
+asio::io_context&
+service::io_context()
+{ return io_context_; }
 
-const asio::io_service&
-service::io_service() const
-{ return io_service_; }
+const asio::io_context&
+service::io_context() const
+{ return io_context_; }
 
 void
 service::add(object_ptr sptr)
@@ -54,7 +54,7 @@ service::remove(object_ptr sptr)
 service&
 service::operator<<(void_cb&& cb)
 {
-    io_service_.post(
+    io_context_.post(
         [cb = std::move(cb)]() {
             cb();
         }
@@ -73,8 +73,8 @@ service::start()
 
     t_ = std::thread(
         [this]() {
-            io_service_.run();
-            io_service_.reset();
+            io_context_.run();
+            io_context_.reset();
 
             {
                 std::lock_guard<std::mutex> lock(objects_mutex_);
@@ -100,7 +100,7 @@ service::start()
             const std::size_t max_count = 1000;
             error_code ec;
 
-            while (io_service_.poll(ec) != 0) {
+            while (io_context_.poll(ec) != 0) {
                 if (ec) {
                     std::cout
                         << "service poll error: "
@@ -136,12 +136,12 @@ service::stop()
         return;
     }
 
-    io_service_.stop();
+    io_context_.stop();
     t_.join();
-    io_service_.reset();
+    io_context_.reset();
 }
 
-task_ptr 
+task_ptr
 service::available_task()
 {
     std::lock_guard<std::mutex> lock(tasks_mutex_);

@@ -21,11 +21,11 @@ class NX_API task
 {
 public:
     task()
-    : io_service_(),
-      work_(io_service_),
+    : io_context_(),
+      work_(io_context_),
       t_([this](){
-          io_service_.run();
-          io_service_.reset();
+          io_context_.run();
+          io_context_.reset();
       })
     {}
 
@@ -35,22 +35,22 @@ public:
     task(const task& ) = delete;
     task& operator= (const task& ) = delete;
 
-    asio::io_service& get_io_service()
-    { return io_service_; }
+    asio::io_context& get_io_context()
+    { return io_context_; }
 
-    const asio::io_service& get_io_service() const
-    { return io_service_; }
+    const asio::io_context& get_io_context() const
+    { return io_context_; }
 
     virtual void stop() override
     {
-        io_service_.stop();
+        io_context_.stop();
         t_.join();
-        io_service_.reset();
+        io_context_.reset();
     }
 
 private:
-    asio::io_service io_service_;
-    asio::io_service::work work_;
+    asio::io_context io_context_;
+    asio::io_context::work work_;
     std::thread t_;
 };
 

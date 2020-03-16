@@ -29,8 +29,8 @@ public:
     void start();
     void stop();
 
-    asio::io_service& io_service();
-    const asio::io_service& io_service() const;
+    asio::io_context& io_context();
+    const asio::io_context& io_context() const;
 
     void add(object_ptr sptr);
     void remove(object_ptr sptr);
@@ -44,8 +44,8 @@ private:
     service(const service&) = delete;
     void operator=(const service&) = delete;
 
-    asio::io_service io_service_;
-    asio::io_service::work work_;
+    asio::io_context io_context_;
+    asio::io_context::work work_;
     std::thread t_;
 
     std::unordered_set<object_ptr> objects_;

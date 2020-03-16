@@ -30,7 +30,7 @@ public:
     using base_type::base_type;
 
     tcp_base() = default;
-    tcp_base(asio::io_service& io)
+    tcp_base(asio::io_context& io)
     : base_type(io)
     {}
 
@@ -66,7 +66,7 @@ public:
     acceptor_type& make_acceptor()
     {
         acceptor_ptr_ = std::make_unique<acceptor_type>(
-            base_type::io_service()
+            base_type::io_context()
         );
 
         return *acceptor_ptr_;
@@ -81,7 +81,7 @@ public:
     resolver_type& make_resolver()
     {
         resolver_ptr_ = std::make_unique<resolver_type>(
-            base_type::io_service()
+            base_type::io_context()
         );
 
         return *resolver_ptr_;

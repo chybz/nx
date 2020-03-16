@@ -24,23 +24,6 @@ struct postponer
     object_base& o;
 };
 
-struct external_postponer
-{
-    external_postponer& operator<<(void_cb&& cb)
-    {
-        auto ptr = o.ptr();
-
-        io.post([ptr,cb = std::move(cb)](){
-            cb();
-        });
-
-        return *this;
-    }
-
-    object_base& o;
-    asio::io_service& io;
-};
-
 template <
     typename Derived,
     typename... Callbacks
@@ -71,9 +54,6 @@ public:
 
     postponer postpone()
     { return postponer{ *this }; }
-
-    external_postponer postpone(asio::io_service& io)
-    { return external_postponer{*this, io}; }
 
     template <
         typename Tag,

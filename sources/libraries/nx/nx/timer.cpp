@@ -4,7 +4,7 @@
 namespace nx {
 
 timer::timer()
-: t_(service::get().io_service())
+: t_(service::get().io_context())
 {}
 
 timer::~timer()

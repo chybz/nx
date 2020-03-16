@@ -40,7 +40,7 @@ public:
     reply_cb_(std::move(cb))
     {}
 
-    http(request&& req, reply_cb&& cb, asio::io_service& io)
+    http(request&& req, reply_cb&& cb, asio::io_context& io)
     : base_type(io),
     req_(std::move(req)),
     reply_cb_(std::move(cb))
@@ -258,7 +258,7 @@ Http&
 sync_connect(const typename Http::endpoint_type& ep, request&& req, OnReply&& cb, int32_t timeout_s)
 {
     auto t = std::make_shared<task>();
-    auto p = new_object<Http>(std::move(req), std::move(cb), t->get_io_service());
+    auto p = new_object<Http>(std::move(req), std::move(cb), t->get_io_context());
 
     auto& h = *p;
     cond_var cv;

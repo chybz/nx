@@ -70,34 +70,26 @@ public:
     static constexpr std::size_t default_read_size = 10 * 1024 * 1024;
 
     socket()
-    : socket_(service::get().io_service())
+    : io_context_(service::get().io_context()),
+    socket_(io_context_)
     {}
 
-    socket(asio::io_service& io)
-    : socket_(io)
+    socket(asio::io_context& ctx)
+    : io_context_(ctx),
+    socket_(io_context_)
     {}
 
-    socket(socket_type other_socket)
-    : socket_(std::move(other_socket))
+    template <typename BaseSocket>
+    socket(BaseSocket&& s)
+    : io_context_(service::get().io_context()),
+    socket_(std::move(s))
     {}
 
     socket(const socket& other) = delete;
     socket(socket&& other) = default;
 
-    template<typename OtherDerived>
-    socket(socket<OtherDerived,Socket, Callbacks...>&& other)
-    : socket_(std::move(other.socket_))
-    {}
-
     socket& operator=(const socket& other) = delete;
     socket& operator=(socket&& other) = default;
-
-    template<typename OtherDerived>
-    socket& operator=(socket<OtherDerived, Socket, Callbacks...>&& other)
-    {
-        socket_ = std::move(other.socket_);
-        return *this;
-    }
 
     virtual ~socket()
     {}
@@ -111,7 +103,8 @@ public:
     virtual void start()
     {
         cancel_ = false;
-        base_type::postpone(socket_.get_io_service()) << [this]() { read(); };
+
+        base_type::postpone() << [this]() { read(); };
     }
 
     virtual void stop()
@@ -208,8 +201,8 @@ protected:
     Derived const& derived() const
     { return *static_cast<Derived const*>(this); }
 
-    auto& io_service()
-    { return socket_.get_io_service(); }
+    auto& io_context()
+    { return io_context_; }
 
     buffer& rbuf()
     { return rbuf_; }
@@ -224,7 +217,7 @@ protected:
         soft_stop_ = true;
 
         if (!closed_ && wcq_.empty()) {
-            base_type::postpone(socket_.get_io_service()) << [this]() { close(); };
+            base_type::postpone() << [this]() { close(); };
         }
     }
 
@@ -292,7 +285,7 @@ private:
                     base_type::handler(tags::on_read)(derived());
                 }
 
-                base_type::postpone(socket_.get_io_service()) << [&]() { read(); };
+                base_type::postpone() << [&]() { read(); };
 
             }
         );
@@ -308,9 +301,9 @@ private:
 
         if (wcq_.empty()) {
             if (soft_stop_) {
-                base_type::postpone(socket_.get_io_service()) << [&]() { stop(); };
+                base_type::postpone() << [&]() { stop(); };
             } else {
-                base_type::postpone(socket_.get_io_service()) << [&]() {
+                base_type::postpone() << [&]() {
                     base_type::handler(tags::on_drain)(derived());
                 };
             }
@@ -374,7 +367,7 @@ private:
         writing_ = false;
 
         if (write_next) {
-            base_type::postpone(socket_.get_io_service()) << [this](){ write(); };
+            base_type::postpone() << [this](){ write(); };
         }
     }
 
@@ -386,6 +379,7 @@ private:
         }
     }
 
+    asio::io_context& io_context_;
     socket_type socket_;
     buffer buf_;
     buffer rbuf_;
